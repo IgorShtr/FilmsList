@@ -2,12 +2,15 @@ import React, { useState, useLayoutEffect} from 'react';
 import axios from 'axios';
 import {connect} from 'react-redux';
 import {MoviesList} from '../components/moviesList';
-import {FilmDetails} from '../components/filmDetails'
+import {FilmDetails} from '../components/filmDetails';
 import styled from 'styled-components';
 
+//store
 import {setAvalibleGenres} from '../store/genres';
 import {setIncreasePaginationPage,
           setReducePaginationPage} from '../store/genres';
+ //components
+  import {Layout} from '../components/common/layout'
 
 const MapStateToProps = store =>({
   ganresList: store.ganres,
@@ -24,33 +27,17 @@ useLayoutEffect(()=>{
   props.setAvalibleGenres();
 },[])
 
-const movieSerch = (e) =>{
-  let value = e.target.value
-  const url =`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&language=en-US&page=1&query=${value}`
-  // const url =`https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&language=en-US&with_keywords=${value}&page=1`
-  const timeoutId = setTimeout(() => {
-    axios
-      .get(url)
-       .then(result => {
-        console.log(result)
-        // setSearchResults(products.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }, 1000);
-  setTimeout(()=>console.log(value), 2000)
- 
-}
+
   return (
-    <Container className="App">
-      <Header className="App-header">
+    <Layout>
+      {/* <Header >
         <p>Best movies</p> 
       </Header>
       <SerchBlock>
         <p>Get movie by title</p>
+        <FontAwesomeIcon icon={faSearch} style={{color: "white"}}/>
         <Serchinput onChange={movieSerch} type="text"></Serchinput>
-      </SerchBlock>
+      </SerchBlock> */}
       <MoviesData>        
         <MoviesList api_key={api_key} setPagesQuantity={setPagesQuantity} dataKey={"popular"}/>
         {/* <FilmDetails api_key={api_key} movie_id={311}/> */}
@@ -63,7 +50,7 @@ const movieSerch = (e) =>{
         <LoadMore onClick={()=>props.setIncreasePaginationPage()}>&#187;</LoadMore>
       </NavyButtons>
       
-    </Container>
+    </Layout>
   );
 });
 
@@ -78,30 +65,30 @@ background-color: black;
 padding-bottom: 50px;
 
 `
-const Header = styled.header`
-// margin: 0 auto;
-display: flex;
-justify-content: center;
-& p {
-  color: white;
-  text-transform: uppercase;
-  font-weight: bold; 
-  // border: 1px solid black;
-  padding: 10px 30px;
-  font-size: 36px;
-}
-`
-const SerchBlock = styled.div`
- margin: 20px auto;
- & p{
+// const Header = styled.header`
+// // margin: 0 auto;
+// display: flex;
+// justify-content: center;
+// & p {
+//   color: white;
+//   text-transform: uppercase;
+//   font-weight: bold; 
+//   // border: 1px solid black;
+//   padding: 10px 30px;
+//   font-size: 36px;
+// }
+// `
+// const SerchBlock = styled.div`
+//  margin: 20px auto;
+//  & p{
 
-   color: white;
- }
+//    color: white;
+//  }
 
-`
- const Serchinput = styled.input`
- 
- `
+// `
+//  const Serchinput = styled.input`
+//  margin-left: 5px;
+//  `
 const MoviesData = styled.div`
 display: flex;
 align-items: center;
