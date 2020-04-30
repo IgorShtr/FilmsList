@@ -23,13 +23,36 @@ const {paginationPage} = props
 useLayoutEffect(()=>{
   props.setAvalibleGenres();
 },[])
+
+const movieSerch = (e) =>{
+  let value = e.target.value
+  const url =`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&language=en-US&page=1&query=${value}`
+  // const url =`https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&language=en-US&with_keywords=${value}&page=1`
+  const timeoutId = setTimeout(() => {
+    axios
+      .get(url)
+       .then(result => {
+        console.log(result)
+        // setSearchResults(products.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, 1000);
+  setTimeout(()=>console.log(value), 2000)
+ 
+}
   return (
     <Container className="App">
       <Header className="App-header">
         <p>Best movies</p> 
       </Header>
+      <SerchBlock>
+        <p>Get movie by title</p>
+        <Serchinput onChange={movieSerch} type="text"></Serchinput>
+      </SerchBlock>
       <MoviesData>        
-        <MoviesList api_key={api_key} setPagesQuantity={setPagesQuantity} />
+        <MoviesList api_key={api_key} setPagesQuantity={setPagesQuantity} dataKey={"popular"}/>
         {/* <FilmDetails api_key={api_key} movie_id={311}/> */}
       </MoviesData>
       <NavyButtons>
@@ -68,10 +91,19 @@ justify-content: center;
   font-size: 36px;
 }
 `
+const SerchBlock = styled.div`
+ margin: 20px auto;
+ & p{
+
+   color: white;
+ }
+
+`
+ const Serchinput = styled.input`
+ 
+ `
 const MoviesData = styled.div`
 display: flex;
-// justify-content: space-around;
-// justify-content: start;
 align-items: center;
 `
 const NavyButtons = styled.div`

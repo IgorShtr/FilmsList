@@ -14,29 +14,30 @@ const MapStateToProps = store =>({
 
 export const MoviesList =connect(MapStateToProps) (props => {
   const [moviesList, setMoviesList] = useState([]);
-  const {api_key, setPagesQuantity, paginationPage} = props;
+  const {api_key, setPagesQuantity, paginationPage, dataKey, id} = props;
  const {ganresList} = props;
 // console.log(props)
-  const [movieInfo, setMovieInfo] = useState({});
-  const [isDataResived, setIsDataResived] = useState(false);
-
+  // const [movieInfo, setMovieInfo] = useState({});
+  // const [isDataResived, setIsDataResived] = useState(false);
+  const movieId = id ? `${id}/` :""; 
   useEffect(() => {
   
-    const url = `https://api.themoviedb.org/3/movie/popular?api_key=${api_key}&language=en-US&page=${paginationPage}`;      
+    const url = `https://api.themoviedb.org/3/movie/${movieId}${dataKey}?api_key=${api_key}&language=en-US&page=${paginationPage}`; 
+    // console.log(url)
     axios.get(url).then(result => {
-      console.log(result.data)
+      // console.log(result.data)
       setMoviesList(result.data.results);
-      setPagesQuantity(result.data.total_pages)
+      setPagesQuantity && setPagesQuantity(result.data.total_pages)
     });  
 }, [paginationPage]);
-
-const list = moviesList.map(({title, id,  poster_path, vote_average, genre_ids}) => {
+const moviesListVariants = id ? (moviesList.slice(0, 6)) : moviesList
+const list = moviesListVariants.map(({title, id,  poster_path, vote_average, genre_ids}) => {
   const movieGanres = genre_ids.map(item =>ganresList.filter(({id})=>id===item).map(({name})=>name)[0]); 
-  const ganres = movieGanres.map(item =>(  
+  const genres = movieGanres.map(item =>(  
     <p key={uuidv4()}>{item}</p>   
   ));
   return (
-<MovieBreff key={id}>
+<MovieBreff  key={id}>
     <Linck to={`/movieDetales/${id}`}>
       <Title>
         <p>{title}</p>
@@ -49,7 +50,7 @@ const list = moviesList.map(({title, id,  poster_path, vote_average, genre_ids})
         </Reiting>      
         <Ganres>
           {/* <p>Ganre</p> */}
-          {ganres}
+          {genres}
         </Ganres>
         </ItemFooter>       
     </Linck>
@@ -65,6 +66,7 @@ return <AllMovies>{list}</AllMovies>
 const AllMovies = styled.div`
 display: flex;
 flex-wrap:wrap;
+justify-content: center;
 
 `
 const Linck = styled(NavLink)`
@@ -77,7 +79,7 @@ font-weight: bold;
 padding-left: 5px;
 width: 200px;
 p{
-  width: 200px;
+  width:200px;
   text-overflow: ellipsis;
   height: 21px;
  overflow:hidden;
@@ -89,8 +91,11 @@ const MovieBreff = styled.div`
  background: lightgrey;
  margin-left: 10px;
  margin-bottom: 20px;
+ width:210px;
  & img{
- width: 200px;
+  display: block;
+  margin: 0 auto; 
+  width:200px;
 
  }
 `
@@ -109,31 +114,11 @@ width: 100px;
 flex-wrap: wrap;
 >p{
   font-size: 12px; 
-  margin: 5px;
+  margin: 0 2px;
   color:black;
 }
 `
 const ItemFooter = styled.div`
 display: flex;
 justify-content: space-between;
-// >p{
-//   font-size: 14px;
-//   font-weight: bold;
-//   margin: 5px;
-//   color:black;
-// }
 `
-// popularity: 511.945
-// vote_count: 3150
-// video: false
-// poster_path: "/xBHvZcjRiWyobQ9kxBhO6B2dtRI.jpg"
-// id: 419704
-// adult: false
-// backdrop_path: "/5BwqwxMEjeFtdknRV792Svo0K1v.jpg"
-// original_language: "en"
-// original_title: "Ad Astra"
-// genre_ids: (2) [18, 878]
-// title: "Ad Astra"
-// vote_average: 6
-// overview: "The near future, a time when both hope and hardships drive humanity to look to the stars and beyond. While a mysterious phenomenon menaces to destroy life on planet Earth, astronaut Roy McBride undertakes a mission across the immensity of space and its many perils to uncover the truth about a lost expedition that decades before boldly faced emptiness and silence in search of the unknown."
-// release_date: "2019-09-17

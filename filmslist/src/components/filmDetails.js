@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
-import { mediaMobile } from '../styledMediaBrakepoints'
+import { mediaMobile } from '../styledMediaBrakepoints';
+import {MoviesList} from '../components/moviesList';
 
 
 import styled from "styled-components";
@@ -12,17 +13,16 @@ export const FilmDetails = (props) => {
   const { id } = useParams();
   // console.log(id)
   const [movieInfo, setMovieInfo] = useState({});
-  // const [isDataResived, setIsDataResived] = useState(false);
+  const [recomendedMovies, setRecomendedMovies] = useState();
   const api_key = "c215f1cdd43fb62b0e5a94539084aae9";
-  useEffect(() => {
-
-    const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${api_key}&language=en-US `
+  useLayoutEffect(()=>{
+       const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${api_key}&language=en-US `
     axios.get(url).then(result => {
       console.log(result.data)
       setMovieInfo(result.data);
     });
-
-  }, [id]);
+  
+  },[id])
 
 
 
@@ -32,11 +32,13 @@ export const FilmDetails = (props) => {
   const ganresList = genres && movieGenresList.map(item => (
     <p key={uuidv4()}>{item}</p>
   ));
-  return <MovieDitails >
-    <div>
+
+  // const recomended =recomendedMovies && recomendedMovies.map(it=>it)
+//  console.log(recomendedMovies) 
+  return <MovieDitails > 
+ <MovieCommon>
       <img src={`https://image.tmdb.org/t/p/w500/${poster_path}`} alt="not found"></img>
-    </div>
-    <MovieData>
+<MovieData>     
       <p>{original_title}</p>
       <ExectData>
         <p>Owerviev</p>
@@ -53,7 +55,12 @@ export const FilmDetails = (props) => {
         <p>{runtime}min</p>
       </ExectData>
     </MovieData>
-
+    </MovieCommon>
+    
+    <RecomendedSection>
+      <div>Recomended</div>
+      <MoviesList  api_key={api_key} dataKey={"recommendations"} id={id} />
+    </RecomendedSection>
   </MovieDitails>
 }
 
@@ -61,10 +68,11 @@ const MovieDitails = styled.div`
 padding-top: 10px;
 padding-bottom: 10px;
 width: 100%;
-height: 100vh;
+height: 100%;
 background-color:black;
 color: white;
 display:flex;
+flex-direction:column;
 ${mediaMobile(`
 flex-direction:column;
 align-items: center;
@@ -81,6 +89,13 @@ align-items: center;
 //   text-align: center;
 //   margin: 0;
 // }
+`
+const MovieCommon = styled.div`
+display:flex;
+${mediaMobile(`
+flex-direction:column;
+align-items: center;
+`)}
 `
 const MovieData = styled.div`
 display: flex;
@@ -115,4 +130,13 @@ display:flex;
  & p:last-child{
   text-align:left;
   }
+`
+const RecomendedSection = styled.div`
+ margit-top: 30px;
+ >div{
+   margin: 20px auto;
+   width: fit-content;
+  font-weight: 500;
+  font-size: 18px;
+ }
 `
