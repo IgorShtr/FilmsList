@@ -16,16 +16,14 @@ export const MoviesList =connect(MapStateToProps) (props => {
   const [moviesList, setMoviesList] = useState([]);
   const {api_key, setPagesQuantity, paginationPage, dataKey, id} = props;
  const {ganresList} = props;
-// console.log(props)
-  // const [movieInfo, setMovieInfo] = useState({});
-  // const [isDataResived, setIsDataResived] = useState(false);
+
   const movieId = id ? `${id}/` :""; 
   useEffect(() => {
   
     const url = `https://api.themoviedb.org/3/movie/${movieId}${dataKey}?api_key=${api_key}&language=en-US&page=${paginationPage}`; 
     // console.log(url)
     axios.get(url).then(result => {
-      // console.log(result.data)
+      console.log(result.data)
       setMoviesList(result.data.results);
       setPagesQuantity && setPagesQuantity(result.data.total_pages)
     });  
@@ -40,12 +38,16 @@ const list = moviesListVariants.map(({title, id,  poster_path, vote_average, gen
 <MovieBreff  key={id}>
     <Linck to={`/movieDetales/${id}`}>
       <Title>
-        <p>{title}</p>
+        <p className="movieTille">{title}</p>
       </Title>       
         <img src={`https://image.tmdb.org/t/p/w500/${poster_path}`} alt="not found"></img>
         <ItemFooter>
-            <Reiting>
-          <p>Reting</p>
+          <Info>
+            
+          </Info>
+          
+          <Reiting>
+          {/* <p>Reting</p> */}
           <p>{vote_average}</p>
         </Reiting>      
         <Ganres>
@@ -71,7 +73,21 @@ justify-content: center;
 `
 const Linck = styled(NavLink)`
 text-decoration:none;
+`
 
+const MovieBreff = styled.div`
+ background: lightgrey;
+ margin-left: 10px;
+ margin-bottom: 20px;
+ width:210px;
+ & img{
+  display: block;
+  margin: 0 auto; 
+  width:200px;
+ }
+ & :hover .movieTille{
+  text-decoration: underline;
+}
 `
 const Title = styled.div`
 color: black;
@@ -84,20 +100,11 @@ p{
   height: 21px;
  overflow:hidden;
  white-space: nowrap; 
+ color: DarkSlateGray;
 }
-
 `
-const MovieBreff = styled.div`
- background: lightgrey;
- margin-left: 10px;
- margin-bottom: 20px;
- width:210px;
- & img{
-  display: block;
-  margin: 0 auto; 
-  width:200px;
+const Info = styled.div`
 
- }
 `
 const Reiting = styled.div`
 display: flex;

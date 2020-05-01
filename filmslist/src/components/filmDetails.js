@@ -2,23 +2,26 @@ import React, { useState, useEffect, useLayoutEffect } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
+import styled from "styled-components";
+
+import {Layout} from './common/layout';
 import { mediaMobile } from '../styledMediaBrakepoints';
 import {MoviesList} from '../components/moviesList';
 
 
-import styled from "styled-components";
+
 
 export const FilmDetails = (props) => {
   // const { movie_id} = props;
   const { id } = useParams();
   // console.log(id)
   const [movieInfo, setMovieInfo] = useState({});
-  const [recomendedMovies, setRecomendedMovies] = useState();
+  // const [recomendedMovies, setRecomendedMovies] = useState();
   const api_key = "c215f1cdd43fb62b0e5a94539084aae9";
   useLayoutEffect(()=>{
        const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${api_key}&language=en-US `
     axios.get(url).then(result => {
-      console.log(result.data)
+      // console.log(result.data)
       setMovieInfo(result.data);
     });
   
@@ -33,36 +36,39 @@ export const FilmDetails = (props) => {
     <p key={uuidv4()}>{item}</p>
   ));
 
-  // const recomended =recomendedMovies && recomendedMovies.map(it=>it)
-//  console.log(recomendedMovies) 
-  return <MovieDitails > 
- <MovieCommon>
-      <img src={`https://image.tmdb.org/t/p/w500/${poster_path}`} alt="not found"></img>
-<MovieData>     
-      <p>{original_title}</p>
-      <ExectData>
-        <p>Owerviev</p>
-        <p>{overview}</p>
-      </ExectData>
-      <ExectData>
-        <p>Genre</p>
-        <div>
-          {ganresList}
-        </div>
-      </ExectData>
-      <ExectData>
-        <p>Runtime</p>
-        <p>{runtime}min</p>
-      </ExectData>
-    </MovieData>
-    </MovieCommon>
-    
-    <RecomendedSection>
-      <div>Recomended</div>
-      <MoviesList  api_key={api_key} dataKey={"recommendations"} id={id} />
-    </RecomendedSection>
-  </MovieDitails>
-}
+ 
+  return(
+    <Layout>
+      <MovieDitails > 
+        <MovieCommon>
+              <img src={`https://image.tmdb.org/t/p/w500/${poster_path}`} alt="not found"></img>
+        <MovieData>     
+              <p>{original_title}</p>
+              <ExectData>
+                <p>Owerviev</p>
+                <p>{overview}</p>
+              </ExectData>
+              <ExectData>
+                <p>Genre</p>
+                <div>
+                  {ganresList}
+                </div>
+              </ExectData>
+              <ExectData>
+                <p>Runtime</p>
+                <p>{runtime}min</p>
+              </ExectData>
+            </MovieData>
+            </MovieCommon>      
+        <RecomendedSection>
+          <div>Recomended</div>
+          <MoviesList  api_key={api_key} dataKey={"recommendations"} id={id} />
+      </RecomendedSection>
+    </MovieDitails>
+  </Layout>
+ 
+  )
+};
 
 const MovieDitails = styled.div`
 padding-top: 10px;
@@ -83,12 +89,7 @@ align-items: center;
   height: 230px;
   border: 1px solid grey;
 }
-// & > p {
-//   font-weight: 700;
-//   text-transform: capitalize;
-//   text-align: center;
-//   margin: 0;
-// }
+
 `
 const MovieCommon = styled.div`
 display:flex;

@@ -1,8 +1,7 @@
 import React, { useState, useLayoutEffect} from 'react';
 import axios from 'axios';
 import {connect} from 'react-redux';
-import {MoviesList} from '../components/moviesList';
-import {FilmDetails} from '../components/filmDetails';
+import ScrollUpButton from "react-scroll-up-button";
 import styled from 'styled-components';
 
 //store
@@ -10,7 +9,8 @@ import {setAvalibleGenres} from '../store/genres';
 import {setIncreasePaginationPage,
           setReducePaginationPage} from '../store/genres';
  //components
-  import {Layout} from '../components/common/layout'
+  import {Layout} from '../components/common/layout';
+  import {MoviesList} from '../components/moviesList';
 
 const MapStateToProps = store =>({
   ganresList: store.ganres,
@@ -29,15 +29,7 @@ useLayoutEffect(()=>{
 
 
   return (
-    <Layout>
-      {/* <Header >
-        <p>Best movies</p> 
-      </Header>
-      <SerchBlock>
-        <p>Get movie by title</p>
-        <FontAwesomeIcon icon={faSearch} style={{color: "white"}}/>
-        <Serchinput onChange={movieSerch} type="text"></Serchinput>
-      </SerchBlock> */}
+    <Layout>   
       <MoviesData>        
         <MoviesList api_key={api_key} setPagesQuantity={setPagesQuantity} dataKey={"popular"}/>
         {/* <FilmDetails api_key={api_key} movie_id={311}/> */}
@@ -49,46 +41,20 @@ useLayoutEffect(()=>{
   <p>page {paginationPage} of {pagesQuantity}</p>
         <LoadMore onClick={()=>props.setIncreasePaginationPage()}>&#187;</LoadMore>
       </NavyButtons>
-      
+      <ScrollUpButton 
+        StopPosition={0}
+        ShowAtPosition={900}
+        EasingType='easeOutCubic'
+        AnimationDuration={500}
+        ContainerClassName='ScrollUpButton__Container'
+        TransitionClassName='ScrollUpButton__Toggled'
+        style={{}}
+        ToggledStyle={{}}/>
     </Layout>
   );
 });
 
 
-const Container = styled.div`
-display: flex;
-flex-direction: column;
-// aligin-items: center;
-width: 100vw;
-height: 100%;
-background-color: black;
-padding-bottom: 50px;
-
-`
-// const Header = styled.header`
-// // margin: 0 auto;
-// display: flex;
-// justify-content: center;
-// & p {
-//   color: white;
-//   text-transform: uppercase;
-//   font-weight: bold; 
-//   // border: 1px solid black;
-//   padding: 10px 30px;
-//   font-size: 36px;
-// }
-// `
-// const SerchBlock = styled.div`
-//  margin: 20px auto;
-//  & p{
-
-//    color: white;
-//  }
-
-// `
-//  const Serchinput = styled.input`
-//  margin-left: 5px;
-//  `
 const MoviesData = styled.div`
 display: flex;
 align-items: center;
