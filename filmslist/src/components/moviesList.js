@@ -16,12 +16,12 @@ export const MoviesList =connect(MapStateToProps) (props => {
   const [moviesList, setMoviesList] = useState([]);
   const {api_key, setPagesQuantity, paginationPage, dataKey, id} = props;
  const {ganresList} = props;
-
+console.log(props)
   const movieId = id ? `${id}/` :""; 
   useEffect(() => {
   
     const url = `https://api.themoviedb.org/3/movie/${movieId}${dataKey}?api_key=${api_key}&language=en-US&page=${paginationPage}`; 
-    // console.log(url)
+    
     axios.get(url).then(result => {
       console.log(result.data)
       setMoviesList(result.data.results);
@@ -35,24 +35,20 @@ const list = moviesListVariants.map(({title, id,  poster_path, vote_average, gen
     <p key={uuidv4()}>{item}</p>   
   ));
   return (
-<MovieBreff  key={id}>
+<MovieBreff  key={id} height={props.height} width={props.width}>
     <Linck to={`/movieDetales/${id}`}>
-      <Title>
+      <Title width={props.width}>
         <p className="movieTille">{title}</p>
       </Title>       
         <img src={`https://image.tmdb.org/t/p/w500/${poster_path}`} alt="not found"></img>
-        <ItemFooter>
-          <Info>
-            
-          </Info>
-          
-          <Reiting>
-          {/* <p>Reting</p> */}
-          <p>{vote_average}</p>
+        <ItemFooter width={props.width}>
+          {/* <Info>            
+          </Info>           */}
+          <Reiting >
+          <p>{`Reting  ${vote_average}`}</p>       
         </Reiting>      
         <Ganres>
-          {/* <p>Ganre</p> */}
-          {genres}
+           {genres}
         </Ganres>
         </ItemFooter>       
     </Linck>
@@ -78,12 +74,13 @@ text-decoration:none;
 const MovieBreff = styled.div`
  background: lightgrey;
  margin-left: 10px;
- margin-bottom: 20px;
- width:210px;
+ margin-bottom: 20px; 
+ width: ${props=>props.width ? props.width :"210px"};
  & img{
   display: block;
   margin: 0 auto; 
-  width:200px;
+  width:95%;
+  height:${props => (props.height ? props.height : "290px") } ;
  }
  & :hover .movieTille{
   text-decoration: underline;
@@ -93,9 +90,10 @@ const Title = styled.div`
 color: black;
 font-weight: bold;
 padding-left: 5px;
-width: 200px;
-p{
-  width:200px;
+width: ${props=>props.width ? props.width*0.9 :"200px"};
+ font-size: ${props=>props.width ? "12px" : "16px"};  
+ p{ 
+  width:inherit;
   text-overflow: ellipsis;
   height: 21px;
  overflow:hidden;
@@ -103,11 +101,10 @@ p{
  color: DarkSlateGray;
 }
 `
-const Info = styled.div`
+// const Info = styled.div`
 
-`
+// `
 const Reiting = styled.div`
-display: flex;
 >p{
   font-size: 14px;
   font-weight: bold;
@@ -118,6 +115,7 @@ display: flex;
 const Ganres = styled.div`
 display: flex;
 width: 100px;
+// min-width: 70px;
 flex-wrap: wrap;
 >p{
   font-size: 12px; 
@@ -128,4 +126,5 @@ flex-wrap: wrap;
 const ItemFooter = styled.div`
 display: flex;
 justify-content: space-between;
+align-items: center;
 `

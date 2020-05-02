@@ -13,45 +13,42 @@ export const Header = () => {
   const [ openDroplist, setOpenDroplist] = useState(false);
   const [ timer, setTimer] = useState(0);
 
-  useEffect(()=>{ 
-   console.log(searchQuery)     
-    if (searchQuery.length===0) {
-      console.log("jkfhgljkafdhg")
+  useEffect(()=>{     
+    if (searchQuery.length===0) {      
       clearTimeout( timer);
       setSearchResult([]);
       setOpenDroplist(false);
     }
     else if (searchQuery.length>3){      
       const url =`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&language=en-US&page=1&query=${searchQuery}`
-      const timeout = setTimeout(() => {
-      console.log("request")
+      const timeout = setTimeout(() => {    
       axios
         .get(url)
          .then(result => {          
-          console.log(result.data)
+          
           setSearchResult(result.data.results);
-          setOpenDroplist(true);
+         (!searchResult.length && result.data.total_results)  ? setOpenDroplist(true) :setOpenDroplist(false);
+         
         })
         .catch(err => {
           console.log(err);
         });
-    }, 2000);
+    }, 1500);
     setTimer(timeout)
-    }    
-    // setTimeout(()=>console.log(value), 2000)   
+    }      
   }
   ,[searchQuery]);
 
-  const confirmSerch = ()=>{
-    const input = document.querySelector("input");
-    input.value = null;
-    console.log(input)
-    setOpenDroplist(false)}
+  // const confirmSerch = ()=>{
+  //   const input = document.querySelector("input");
+  //   input.value = null;
+  //   console.log(input)
+  //   setOpenDroplist(false)}
 
 const serchResultList = searchResult && searchResult.map(({id, title, vote_average})=>{
   return (
    <Linck to={`/movieDetales/${id}`} key={uuidv4()}>
-      <SerchListItem  onClick = {confirmSerch}>    
+      <SerchListItem  >    
           <p>{title}</p>
           <p>{vote_average}</p>       
       </SerchListItem>
@@ -63,13 +60,13 @@ const serchResultList = searchResult && searchResult.map(({id, title, vote_avera
       <p>Best movies</p>
     </LayoutHeader>
     <SerchBlock>
-      <p>Get movie by title</p>
+      <p>Movie search</p>
       <FontAwesomeIcon icon={faSearch} style={{ color: "white" }} />
         <Serchinput 
           onChange={(e)=>setSearchQuery(e.target.value)}
           type="text">         
         </Serchinput>
-      {(searchQuery.length>0 & openDroplist) ? (
+      {( openDroplist) ? (
         <SerchResultsCont>
           <ul>
             {serchResultList}
@@ -87,13 +84,14 @@ const HederContainer = styled.div`
  flex-direction: column;
 background-color: DarkSlateGray;
 margin-bottom: 20px;
+color: lightgrey;
 `
 const LayoutHeader = styled.div`
 display: flex;
 justify-content: center;
 & p {
   margin 0;
-  color: white;
+  // color: white;
   text-transform: uppercase;
   font-weight: bold;  
   padding: 10px 5px;
@@ -105,7 +103,7 @@ const SerchBlock = styled.div`
  position: relative;
  & p{
    margin: 0;
-   color: white;
+  //  color: white;
  }
 `
 const Serchinput = styled.input`

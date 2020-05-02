@@ -8,28 +8,23 @@ import {Layout} from './common/layout';
 import { mediaMobile } from '../styledMediaBrakepoints';
 import {MoviesList} from '../components/moviesList';
 
-
-
-
 export const FilmDetails = (props) => {
   // const { movie_id} = props;
   const { id } = useParams();
-  // console.log(id)
+  console.log(id)
   const [movieInfo, setMovieInfo] = useState({});
   // const [recomendedMovies, setRecomendedMovies] = useState();
   const api_key = "c215f1cdd43fb62b0e5a94539084aae9";
   useLayoutEffect(()=>{
        const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${api_key}&language=en-US `
-    axios.get(url).then(result => {
+       console.log(url)
+       axios.get(url).then(result => {
       // console.log(result.data)
       setMovieInfo(result.data);
-    });
-  
-  },[id])
+    });  
+  },[id]);
 
-
-
-  const { original_title, original_language, overview, runtime, poster_path, genres } = movieInfo && movieInfo;
+  const { original_title,  overview, runtime, poster_path, genres } = movieInfo && movieInfo;
 
   const movieGenresList = genres && genres.map(({ name }) => name);
   const ganresList = genres && movieGenresList.map(item => (
@@ -41,8 +36,8 @@ export const FilmDetails = (props) => {
     <Layout>
       <MovieDitails > 
         <MovieCommon>
-              <img src={`https://image.tmdb.org/t/p/w500/${poster_path}`} alt="not found"></img>
-        <MovieData>     
+              <img  src={`https://image.tmdb.org/t/p/w500/${poster_path}`} alt="not found"></img>
+          <MovieData>     
               <p>{original_title}</p>
               <ExectData>
                 <p>Owerviev</p>
@@ -59,10 +54,10 @@ export const FilmDetails = (props) => {
                 <p>{runtime}min</p>
               </ExectData>
             </MovieData>
-            </MovieCommon>      
+          </MovieCommon>      
         <RecomendedSection>
-          <div>Recomended</div>
-          <MoviesList  api_key={api_key} dataKey={"recommendations"} id={id} />
+          <div>Also may interest</div>
+          <MoviesList  api_key={api_key} dataKey={"recommendations"} id={id} height={"250px"} width={"180px"}/>
       </RecomendedSection>
     </MovieDitails>
   </Layout>
@@ -83,20 +78,19 @@ ${mediaMobile(`
 flex-direction:column;
 align-items: center;
 `)}
-& img {  
-  margin: 0 10px;
-  width: 180px;
-  height: 230px;
-  border: 1px solid grey;
-}
-
 `
 const MovieCommon = styled.div`
+margin: 0 40px;
 display:flex;
 ${mediaMobile(`
 flex-direction:column;
 align-items: center;
 `)}
+& img {  
+  margin: 0 10px;
+  width: 220px; 
+  border: 1px solid grey;
+}
 `
 const MovieData = styled.div`
 display: flex;

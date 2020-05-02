@@ -32,8 +32,7 @@ useLayoutEffect(()=>{
     <Layout>   
       <MoviesData>        
         <MoviesList api_key={api_key} setPagesQuantity={setPagesQuantity} dataKey={"popular"}/>
-        {/* <FilmDetails api_key={api_key} movie_id={311}/> */}
-      </MoviesData>
+     </MoviesData>
       <NavyButtons>
         {paginationPage ===1 ? 
         <DeactivatedBytton/> :
@@ -48,7 +47,7 @@ useLayoutEffect(()=>{
         AnimationDuration={500}
         ContainerClassName='ScrollUpButton__Container'
         TransitionClassName='ScrollUpButton__Toggled'
-        style={{}}
+        style={{bottom:"55px"}}
         ToggledStyle={{}}/>
     </Layout>
   );
