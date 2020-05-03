@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect} from "react";
+import React, { useState, useEffect, useLayoutEffect, Children} from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import {connect} from 'react-redux';
@@ -9,21 +9,26 @@ import { v4 as uuidv4 } from 'uuid';
 
 const MapStateToProps = store =>({
   ganresList: store.ganres.ganresList,
-  paginationPage: store.ganres.paginationPage
+  paginationPage: store.ganres.paginationPage,
+  api_key: store.ganres.api_key
 }) 
 
 export const MoviesList =connect(MapStateToProps) (props => {
   const [moviesList, setMoviesList] = useState([]);
-  const {api_key, setPagesQuantity, paginationPage, dataKey, id} = props;
- const {ganresList} = props;
-console.log(props)
+  const [isRecomendationsAvailable, setIsRecomendationsAvailable]= useState(true);
+  const {api_key,
+        setPagesQuantity, 
+        paginationPage, 
+        dataKey,
+        id, 
+        ganresList} = props;
   const movieId = id ? `${id}/` :""; 
   useEffect(() => {
   
     const url = `https://api.themoviedb.org/3/movie/${movieId}${dataKey}?api_key=${api_key}&language=en-US&page=${paginationPage}`; 
     
-    axios.get(url).then(result => {
-      console.log(result.data)
+    axios.get(url).then(result => {    
+      ( result.data.total_results) && setIsRecomendationsAvailable(false);     
       setMoviesList(result.data.results);
       setPagesQuantity && setPagesQuantity(result.data.total_pages)
     });  
@@ -34,6 +39,7 @@ const list = moviesListVariants.map(({title, id,  poster_path, vote_average, gen
   const genres = movieGanres.map(item =>(  
     <p key={uuidv4()}>{item}</p>   
   ));
+  
   return (
 <MovieBreff  key={id} height={props.height} width={props.width}>
     <Linck to={`/movieDetales/${id}`}>
@@ -41,9 +47,7 @@ const list = moviesListVariants.map(({title, id,  poster_path, vote_average, gen
         <p className="movieTille">{title}</p>
       </Title>       
         <img src={`https://image.tmdb.org/t/p/w500/${poster_path}`} alt="not found"></img>
-        <ItemFooter width={props.width}>
-          {/* <Info>            
-          </Info>           */}
+        <ItemFooter width={props.width}>       
           <Reiting >
           <p>{`Reting  ${vote_average}`}</p>       
         </Reiting>      
@@ -57,7 +61,11 @@ const list = moviesListVariants.map(({title, id,  poster_path, vote_average, gen
 }
  ) 
 
-return <AllMovies>{list}</AllMovies>
+return <AllMovies>{!isRecomendationsAvailable ? list : 
+        (<p>
+          No related movies for recommendations
+        </p>)}
+        </AllMovies>
 
 });
 
@@ -99,11 +107,8 @@ width: ${props=>props.width ? props.width*0.9 :"200px"};
  overflow:hidden;
  white-space: nowrap; 
  color: DarkSlateGray;
-}
-`
-// const Info = styled.div`
+}`
 
-// `
 const Reiting = styled.div`
 >p{
   font-size: 14px;
@@ -115,7 +120,6 @@ const Reiting = styled.div`
 const Ganres = styled.div`
 display: flex;
 width: 100px;
-// min-width: 70px;
 flex-wrap: wrap;
 >p{
   font-size: 12px; 

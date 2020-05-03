@@ -1,26 +1,16 @@
-const AVILIBLE_GENRES = "AVILIBLE_GENRES"
+import axios from 'axios';
+import {avalibleGenres, 
+        increasePaginationPage, 
+        reducePaginationPage, 
+        AVILIBLE_GENRES,
+        INCREASE_PAGINATION_PAGE,
+        REDUCE_PAGINATION_PAGE} from './actions';
 
-const avalibleGenres = payload =>({
-  type:AVILIBLE_GENRES,
-  payload
-});
-
-const INCREASE_PAGINATION_PAGE = "INCREASE_PAGINATION_PAGE"
-
-const increasePaginationPage = () =>({
-  type:INCREASE_PAGINATION_PAGE,
- 
-});
-const REDUCE_PAGINATION_PAGE = "REDUCE_PAGINATION_PAGE"
-
-const reducePaginationPage = () =>({
-  type:REDUCE_PAGINATION_PAGE,
- 
-});
 
 const initialState = {
   ganresList:[],
-  paginationPage: 1
+  paginationPage: 1,
+  api_key: "c215f1cdd43fb62b0e5a94539084aae9",
 
 };
 
@@ -50,11 +40,17 @@ export function  moviesReduser (store = initialState, {type, payload}){
   }
 }
 
-export const setAvalibleGenres = () => async dispatch =>{
-  const res = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=c215f1cdd43fb62b0e5a94539084aae9&language=en-US`);
-  const json = await res.json();
-  // console.log(json)
-  dispatch(avalibleGenres(json.genres))
+export const setAvalibleGenres = () => dispatch =>{
+  axios
+  .get(`https://api.themoviedb.org/3/genre/movie/list?api_key=c215f1cdd43fb62b0e5a94539084aae9&language=en-US`)
+   .then(result => {     
+   const {genres} =result.data;  
+   dispatch(avalibleGenres(genres));   
+  })
+  .catch(err => {
+    console.log(err);
+  });
+  
 };
 
 export const setIncreasePaginationPage = ()=>dispatch=>{

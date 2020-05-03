@@ -3,23 +3,25 @@ import { useParams } from "react-router";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 import styled from "styled-components";
-
+import {connect} from 'react-redux';
+import ScrollUpButton from "react-scroll-up-button";
 import {Layout} from './common/layout';
 import { mediaMobile } from '../styledMediaBrakepoints';
-import {MoviesList} from '../components/moviesList';
 
-export const FilmDetails = (props) => {
-  // const { movie_id} = props;
-  const { id } = useParams();
-  console.log(id)
-  const [movieInfo, setMovieInfo] = useState({});
-  // const [recomendedMovies, setRecomendedMovies] = useState();
-  const api_key = "c215f1cdd43fb62b0e5a94539084aae9";
+import {MoviesList} from './moviesList';
+
+const MapStateToProps = store =>({
+  api_key: store.ganres.api_key
+}); 
+
+export const FilmDetails =connect(MapStateToProps)(props => {
+  const { api_key} = props;
+  const { id } = useParams(); 
+  const [movieInfo, setMovieInfo] = useState({}); 
+  
   useLayoutEffect(()=>{
-       const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${api_key}&language=en-US `
-       console.log(url)
+       const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${api_key}&language=en-US `     
        axios.get(url).then(result => {
-      // console.log(result.data)
       setMovieInfo(result.data);
     });  
   },[id]);
@@ -30,7 +32,6 @@ export const FilmDetails = (props) => {
   const ganresList = genres && movieGenresList.map(item => (
     <p key={uuidv4()}>{item}</p>
   ));
-
  
   return(
     <Layout>
@@ -57,13 +58,20 @@ export const FilmDetails = (props) => {
           </MovieCommon>      
         <RecomendedSection>
           <div>Also may interest</div>
-          <MoviesList  api_key={api_key} dataKey={"recommendations"} id={id} height={"250px"} width={"180px"}/>
+          <MoviesList  dataKey={"recommendations"} id={id} height={"250px"} width={"180px"}/>
       </RecomendedSection>
+      <ScrollUpButton 
+        StopPosition={0}
+        ShowAtPosition={800}
+        EasingType='easeOutCubic'
+        AnimationDuration={500}
+        style={{bottom:"55px"}}
+       />
     </MovieDitails>
   </Layout>
  
   )
-};
+});
 
 const MovieDitails = styled.div`
 padding-top: 10px;

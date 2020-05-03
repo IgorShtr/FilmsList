@@ -5,23 +5,21 @@ import ScrollUpButton from "react-scroll-up-button";
 import styled from 'styled-components';
 
 //store
-import {setAvalibleGenres} from '../store/genres';
+import {setAvalibleGenres} from '../store/reduser';
 import {setIncreasePaginationPage,
-          setReducePaginationPage} from '../store/genres';
+          setReducePaginationPage} from '../store/reduser';
  //components
   import {Layout} from '../components/common/layout';
   import {MoviesList} from '../components/moviesList';
 
 const MapStateToProps = store =>({
   ganresList: store.ganres,
-  paginationPage: store.ganres.paginationPage
-
+  paginationPage: store.ganres.paginationPage,  
 })  
 
 export const  HomePage =connect(MapStateToProps, {setAvalibleGenres,setIncreasePaginationPage, setReducePaginationPage})(props=> {
    
   const [pagesQuantity, setPagesQuantity] = useState();
- const api_key = "c215f1cdd43fb62b0e5a94539084aae9";
 const {paginationPage} = props
 useLayoutEffect(()=>{
   props.setAvalibleGenres();
@@ -31,7 +29,7 @@ useLayoutEffect(()=>{
   return (
     <Layout>   
       <MoviesData>        
-        <MoviesList api_key={api_key} setPagesQuantity={setPagesQuantity} dataKey={"popular"}/>
+        <MoviesList setPagesQuantity={setPagesQuantity} dataKey={"popular"}/>
      </MoviesData>
       <NavyButtons>
         {paginationPage ===1 ? 
@@ -45,10 +43,8 @@ useLayoutEffect(()=>{
         ShowAtPosition={900}
         EasingType='easeOutCubic'
         AnimationDuration={500}
-        ContainerClassName='ScrollUpButton__Container'
-        TransitionClassName='ScrollUpButton__Toggled'
         style={{bottom:"55px"}}
-        ToggledStyle={{}}/>
+       />
     </Layout>
   );
 });

@@ -1,18 +1,23 @@
 import React, {useState, useEffect} from 'react';
 import { NavLink } from "react-router-dom";
 import styled from 'styled-components';
+import {connect} from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faSearch } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
-export const Header = () => {
-  const api_key = "c215f1cdd43fb62b0e5a94539084aae9";
+const MapStateToProps = store =>({
+  api_key: store.ganres.api_key
+}); 
+
+export const Header =connect (MapStateToProps) (props => {
+  const {api_key} = props;
   const [searchQuery, setSearchQuery] = useState("");
   const [ searchResult, setSearchResult] = useState([]);
   const [ openDroplist, setOpenDroplist] = useState(false);
   const [ timer, setTimer] = useState(0);
-
+  
   useEffect(()=>{     
     if (searchQuery.length===0) {      
       clearTimeout( timer);
@@ -24,10 +29,10 @@ export const Header = () => {
       const timeout = setTimeout(() => {    
       axios
         .get(url)
-         .then(result => {          
-          
+         .then(result => {     
+         
           setSearchResult(result.data.results);
-         (!searchResult.length && result.data.total_results)  ? setOpenDroplist(true) :setOpenDroplist(false);
+         (result.data.total_results)  ? setOpenDroplist(true) :setOpenDroplist(false);
          
         })
         .catch(err => {
@@ -39,16 +44,10 @@ export const Header = () => {
   }
   ,[searchQuery]);
 
-  // const confirmSerch = ()=>{
-  //   const input = document.querySelector("input");
-  //   input.value = null;
-  //   console.log(input)
-  //   setOpenDroplist(false)}
-
 const serchResultList = searchResult && searchResult.map(({id, title, vote_average})=>{
   return (
-   <Linck to={`/movieDetales/${id}`} key={uuidv4()}>
-      <SerchListItem  >    
+   <Linck to={`/movieDetales/${id}`} key={uuidv4()} >
+      <SerchListItem onClick={()=>setOpenDroplist(false)} >    
           <p>{title}</p>
           <p>{vote_average}</p>       
       </SerchListItem>
@@ -59,29 +58,35 @@ const serchResultList = searchResult && searchResult.map(({id, title, vote_avera
      <LayoutHeader >
       <p>Best movies</p>
     </LayoutHeader>
-    <SerchBlock>
-      <p>Movie search</p>
-      <FontAwesomeIcon icon={faSearch} style={{ color: "white" }} />
-        <Serchinput 
-          onChange={(e)=>setSearchQuery(e.target.value)}
-          type="text">         
-        </Serchinput>
-      {( openDroplist) ? (
-        <SerchResultsCont>
-          <ul>
-            {serchResultList}
-          </ul>        
-        </SerchResultsCont>) : null}
-    </SerchBlock>
+     <Info>
+        <LinckToMain to='/FilmsList'>
+          <p>&#8617; Back to main</p>
+        </LinckToMain>
+        <SerchBlock>
+        <p>Movie search</p>
+        <FontAwesomeIcon icon={faSearch} style={{ color: "white" }} />
+          <Serchinput 
+            onChange={(e)=>setSearchQuery(e.target.value)}
+            type="text">         
+          </Serchinput>
+        {( openDroplist) ? (
+          <SerchResultsCont>
+            <ul>
+              {serchResultList}
+            </ul>        
+          </SerchResultsCont>) : null}
+      </SerchBlock>      
+    </Info>          
+  
   </HederContainer>  
 
     </>
   )
-};
+});
 
 const HederContainer = styled.div`
- display: flex;
- flex-direction: column;
+display: flex;
+flex-direction: column;
 background-color: DarkSlateGray;
 margin-bottom: 20px;
 color: lightgrey;
@@ -91,19 +96,31 @@ display: flex;
 justify-content: center;
 & p {
   margin 0;
-  // color: white;
   text-transform: uppercase;
   font-weight: bold;  
   padding: 10px 5px;
   font-size: 36px;
 }
 `
+const Info = styled.div`
+display: flex;
+justify-content: space-between;
+align-items: flex-end;
+`
+const LinckToMain = styled(NavLink)`
+text-decoration:none;
+color: lightgrey;
+height: fit-content;
+ margin: 10px 5px;
+p{
+  margin: 0;
+}
+`
 const SerchBlock = styled.div`
- margin: 20px auto;
+  margin: 10px 5px;
  position: relative;
  & p{
    margin: 0;
-  //  color: white;
  }
 `
 const Serchinput = styled.input`

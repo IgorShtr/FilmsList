@@ -1,7 +1,7 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import {moviesReduser} from './genres'
+import {moviesReduser} from './reduser'
 
 const rootReducer = combineReducers({
   ganres:moviesReduser,
