@@ -1,13 +1,13 @@
-import {createStore, combineReducers, applyMiddleware} from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import {composeWithDevTools} from 'redux-devtools-extension';
-import {moviesReduser} from './reduser'
+import { composeWithDevTools } from 'redux-devtools-extension';
+import { moviesReduser } from './reduser'
 
 const rootReducer = combineReducers({
-  ganres:moviesReduser,
+  ganres: moviesReduser,
 })
- const store = createStore(rootReducer, composeWithDevTools(
-   applyMiddleware(thunk)
-   ))
- 
- export default store;
+const store = createStore(rootReducer, composeWithDevTools(
+  applyMiddleware(thunk)
+))
+
+export default store;

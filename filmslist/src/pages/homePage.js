@@ -1,50 +1,51 @@
-import React, { useState, useLayoutEffect} from 'react';
-import axios from 'axios';
-import {connect} from 'react-redux';
+import React, { useState, useLayoutEffect } from 'react';
+import { connect } from 'react-redux';
 import ScrollUpButton from "react-scroll-up-button";
 import styled from 'styled-components';
 
 //store
-import {setAvalibleGenres} from '../store/reduser';
-import {setIncreasePaginationPage,
-          setReducePaginationPage} from '../store/reduser';
- //components
-  import {Layout} from '../components/common/layout';
-  import {MoviesList} from '../components/moviesList';
+import { setAvalibleGenres } from '../store/reduser';
+import {
+  setIncreasePaginationPage,
+  setReducePaginationPage
+} from '../store/reduser';
+//components
+import { Layout } from '../components/common/layout';
+import { MoviesList } from '../components/moviesList';
 
-const MapStateToProps = store =>({
+const MapStateToProps = store => ({
   ganresList: store.ganres,
-  paginationPage: store.ganres.paginationPage,  
-})  
+  paginationPage: store.ganres.paginationPage,
+})
 
-export const  HomePage =connect(MapStateToProps, {setAvalibleGenres,setIncreasePaginationPage, setReducePaginationPage})(props=> {
-   
+export const HomePage = connect(MapStateToProps, { setAvalibleGenres, setIncreasePaginationPage, setReducePaginationPage })(props => {
+
   const [pagesQuantity, setPagesQuantity] = useState();
-const {paginationPage} = props
-useLayoutEffect(()=>{
-  props.setAvalibleGenres();
-},[])
+  const { paginationPage } = props
+  useLayoutEffect(() => {
+    props.setAvalibleGenres();
+  }, [])
 
 
   return (
-    <Layout>   
-      <MoviesData>        
-        <MoviesList setPagesQuantity={setPagesQuantity} dataKey={"popular"}/>
-     </MoviesData>
+    <Layout>
+      <MoviesData>
+        <MoviesList setPagesQuantity={setPagesQuantity} dataKey={"popular"} />
+      </MoviesData>
       <NavyButtons>
-        {paginationPage ===1 ? 
-        <DeactivatedBytton/> :
-        <LoadMore onClick={()=>props.setReducePaginationPage()}>&#171;</LoadMore>}
-  <p>page {paginationPage} of {pagesQuantity}</p>
-        <LoadMore onClick={()=>props.setIncreasePaginationPage()}>&#187;</LoadMore>
+        {paginationPage === 1 ?
+          <DeactivatedBytton /> :
+          <LoadMore onClick={() => props.setReducePaginationPage()}>&#171;</LoadMore>}
+        <p>page {paginationPage} of {pagesQuantity}</p>
+        <LoadMore onClick={() => props.setIncreasePaginationPage()}>&#187;</LoadMore>
       </NavyButtons>
-      <ScrollUpButton 
+      <ScrollUpButton
         StopPosition={0}
         ShowAtPosition={900}
         EasingType='easeOutCubic'
         AnimationDuration={500}
-        style={{bottom:"55px"}}
-       />
+        style={{ bottom: "55px" }}
+      />
     </Layout>
   );
 });

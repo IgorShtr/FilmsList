@@ -1,75 +1,75 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 import styled from "styled-components";
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import ScrollUpButton from "react-scroll-up-button";
-import {Layout} from './common/layout';
+import { Layout } from './common/layout';
 import { mediaMobile } from '../styledMediaBrakepoints';
 
-import {MoviesList} from './moviesList';
+import { MoviesList } from './moviesList';
 
-const MapStateToProps = store =>({
+const MapStateToProps = store => ({
   api_key: store.ganres.api_key
-}); 
+});
 
-export const FilmDetails =connect(MapStateToProps)(props => {
-  const { api_key} = props;
-  const { id } = useParams(); 
-  const [movieInfo, setMovieInfo] = useState({}); 
-  
-  useLayoutEffect(()=>{
-       const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${api_key}&language=en-US `     
-       axios.get(url).then(result => {
+export const FilmDetails = connect(MapStateToProps)(props => {
+  const { api_key } = props;
+  const { id } = useParams();
+  const [movieInfo, setMovieInfo] = useState({});
+
+  useLayoutEffect(() => {
+    const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${api_key}&language=en-US `
+    axios.get(url).then(result => {
       setMovieInfo(result.data);
-    });  
-  },[id]);
+    });
+  }, [id]);
 
-  const { original_title,  overview, runtime, poster_path, genres } = movieInfo && movieInfo;
+  const { original_title, overview, runtime, poster_path, genres } = movieInfo && movieInfo;
 
   const movieGenresList = genres && genres.map(({ name }) => name);
   const ganresList = genres && movieGenresList.map(item => (
     <p key={uuidv4()}>{item}</p>
   ));
- 
-  return(
+
+  return (
     <Layout>
-      <MovieDitails > 
+      <MovieDitails >
         <MovieCommon>
-              <img  src={`https://image.tmdb.org/t/p/w500/${poster_path}`} alt="not found"></img>
-          <MovieData>     
-              <p>{original_title}</p>
-              <ExectData>
-                <p>Owerviev</p>
-                <p>{overview}</p>
-              </ExectData>
-              <ExectData>
-                <p>Genre</p>
-                <div>
-                  {ganresList}
-                </div>
-              </ExectData>
-              <ExectData>
-                <p>Runtime</p>
-                <p>{runtime}min</p>
-              </ExectData>
-            </MovieData>
-          </MovieCommon>      
+          <img src={`https://image.tmdb.org/t/p/w500/${poster_path}`} alt="not found"></img>
+          <MovieData>
+            <p>{original_title}</p>
+            <ExectData>
+              <p>Owerviev</p>
+              <p>{overview}</p>
+            </ExectData>
+            <ExectData>
+              <p>Genre</p>
+              <div>
+                {ganresList}
+              </div>
+            </ExectData>
+            <ExectData>
+              <p>Runtime</p>
+              <p>{runtime}min</p>
+            </ExectData>
+          </MovieData>
+        </MovieCommon>
         <RecomendedSection>
           <div>Also may interest</div>
-          <MoviesList  dataKey={"recommendations"} id={id} height={"250px"} width={"180px"}/>
-      </RecomendedSection>
-      <ScrollUpButton 
-        StopPosition={0}
-        ShowAtPosition={800}
-        EasingType='easeOutCubic'
-        AnimationDuration={500}
-        style={{bottom:"55px"}}
-       />
-    </MovieDitails>
-  </Layout>
- 
+          <MoviesList dataKey={"recommendations"} id={id} height={"250px"} width={"180px"} />
+        </RecomendedSection>
+        <ScrollUpButton
+          StopPosition={0}
+          ShowAtPosition={800}
+          EasingType='easeOutCubic'
+          AnimationDuration={500}
+          style={{ bottom: "55px" }}
+        />
+      </MovieDitails>
+    </Layout>
+
   )
 });
 
