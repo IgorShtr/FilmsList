@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { NavLink } from "react-router-dom";
 import styled from 'styled-components';
 import {connect} from 'react-redux';
+import { useLocation} from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faSearch } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
@@ -17,7 +18,8 @@ export const Header =connect (MapStateToProps) (props => {
   const [ searchResult, setSearchResult] = useState([]);
   const [ openDroplist, setOpenDroplist] = useState(false);
   const [ timer, setTimer] = useState(0);
-  
+  const {pathname} = useLocation();
+  console.log(pathname.includes("movieDetales"));
   useEffect(()=>{     
     if (searchQuery.length===0) {      
       clearTimeout( timer);
@@ -59,9 +61,10 @@ const serchResultList = searchResult && searchResult.map(({id, title, vote_avera
       <p>Best movies</p>
     </LayoutHeader>
      <Info>
-        <LinckToMain to='/FilmsList'>
+       {pathname.includes("movieDetales") ? <LinckToMain to='/FilmsList'>
           <p>&#8617; Back to main</p>
-        </LinckToMain>
+         </LinckToMain> : <div></div>}
+        
         <SerchBlock>
         <p>Movie search</p>
         <FontAwesomeIcon icon={faSearch} style={{ color: "white" }} />

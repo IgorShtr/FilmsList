@@ -42,7 +42,7 @@ export const MoviesList = connect(MapStateToProps)(props => {
 
     return (
       <MovieBreff key={id} height={props.height} width={props.width}>
-        <Linck to={`/movieDetales/${id}`}>
+        <Link to={`/movieDetales/${id}`}>
           <Title width={props.width}>
             <p className="movieTille">{title}</p>
           </Title>
@@ -55,7 +55,7 @@ export const MoviesList = connect(MapStateToProps)(props => {
               {genres}
             </Ganres>
           </ItemFooter>
-        </Linck>
+        </Link>
       </MovieBreff>
     )
   }
@@ -75,7 +75,7 @@ flex-wrap:wrap;
 justify-content: center;
 
 `
-const Linck = styled(NavLink)`
+const Link = styled(NavLink)`
 text-decoration:none;
 `
 
